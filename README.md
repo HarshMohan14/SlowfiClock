@@ -1,6 +1,6 @@
 # SlowfiClock
 
-D·Focus: a lamplit focus hourglass. Real falling sand settles grain by grain into the Mona Lisa as your session ends. Installable as a web app, works offline, and the sand follows your phone's motion sensor.
+D·Focus: a lamplit focus hourglass. Real falling sand settles grain by grain into a picture as your session ends. Two themes: CR7 at the stadium and Mona Lisa at a night desk. Installable as a web app, works offline, and the sand follows your phone's motion sensor.
 
 Everything in this folder is the app: `index.html`, `manifest.webmanifest`, `sw.js` and `icons/`.
 Motion sensors and installing only work over **https**, so put the folder on any static host first.
@@ -25,3 +25,9 @@ Motion sensors and installing only work over **https**, so put the folder on any
 - **Screen:** stays awake during a session. On Android the app is locked to portrait; on iPhone, turn on Portrait Orientation Lock so the hourglass stays fixed to the phone.
 
 After the first visit the app works offline.
+
+## Themes and music
+
+- **CR7** (stadium at dusk) plays “Transformation” by Purrple Cat, licensed CC BY 4.0, credit: Purrple Cat.
+- **Mona Lisa** (night desk) plays a lofi loop generated live by the app.
+- Switch themes in Settings → Theme. Each theme has its own sand colours, shared by both bulbs.
