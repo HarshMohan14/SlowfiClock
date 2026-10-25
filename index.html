@@ -120,6 +120,37 @@ button:focus-visible { outline: 3px solid var(--amber); outline-offset: 4px; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: #8C7A62; flex-shrink: 0; }
 .dot.live { background: #9BD48A; box-shadow: 0 0 8px rgba(155, 212, 138, .7); }
 input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
+
+/* session controls: icons only */
+.controls { left: 200px; width: 541px; }
+.play { width: 116px; height: 116px; border: none; border-radius: 50%; cursor: pointer; display: grid; place-items: center;
+  background: linear-gradient(180deg, #FBEFD5, #F1DDB6); color: var(--cream-ink); box-shadow: 0 10px 30px rgba(0, 0, 0, .38), inset 0 1px 0 rgba(255, 255, 255, .6); transition: transform .15s ease; }
+.play:active { transform: scale(.95); }
+.play svg { width: 46px; height: 46px; display: none; }
+.play[data-icon="pause"] .i-pause, .play[data-icon="play"] .i-play, .play[data-icon="again"] .i-again { display: block; }
+
+/* home: pick a time and a mode */
+.home { position: absolute; inset: 0; z-index: 4; overflow: hidden; display: flex; flex-direction: column; justify-content: center;
+  padding: 24px max(24px, env(safe-area-inset-right, 0px)) 24px max(24px, env(safe-area-inset-left, 0px)); opacity: 0; pointer-events: none; transition: opacity .5s ease; }
+.home.open { opacity: 1; pointer-events: auto; }
+.home-bg { position: absolute; inset: -60px; background: var(--night) center / cover no-repeat; filter: blur(14px) brightness(.5) saturate(1.15); }
+.home-inner { position: relative; width: 100%; max-width: 360px; margin: 0 auto; display: flex; flex-direction: column; gap: 34px; }
+.home-brand { margin: 0; text-align: center; font: 400 15px/1 var(--font-ui); letter-spacing: .34em; padding-left: .34em; color: var(--parchment); }
+.home-label { margin: 0 0 12px; font: 500 12px/1 var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.home-label.nudge { animation: nudge .6s ease; color: var(--amber); }
+@keyframes nudge { 25% { transform: translateX(-4px) } 50% { transform: translateX(4px) } 75% { transform: translateX(-2px) } }
+.home-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.hchip { min-height: 50px; padding: 0 18px; border-radius: 999px; border: 1px solid rgba(246, 231, 200, .24); background: rgba(20, 13, 10, .38); color: var(--cream);
+  font: 400 16px/1 var(--font-ui); cursor: pointer; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: background .2s ease, color .2s ease; }
+.hchip[aria-pressed="true"] { background: linear-gradient(180deg, #FBEFD5, #F1DDB6); color: var(--cream-ink); border-color: transparent; }
+.stepper { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+.stepper[hidden] { display: none; }
+.step { width: 50px; height: 50px; border-radius: 50%; border: 1px solid rgba(246, 231, 200, .3); background: rgba(20, 13, 10, .38); color: var(--cream); display: grid; place-items: center; cursor: pointer; }
+.step.go { margin-left: auto; background: linear-gradient(180deg, #FBEFD5, #F1DDB6); color: var(--cream-ink); border-color: transparent; }
+.step-val { min-width: 110px; text-align: center; font: 300 22px/1 var(--font-ui); font-variant-numeric: tabular-nums; color: var(--cream); }
+.end { width: 100%; min-height: 48px; border-radius: 14px; border: 1px solid var(--line); background: transparent; color: var(--cream); font: 400 16px/1 var(--font-ui); cursor: pointer; }
+.credit { padding-top: 14px; }
+@media (prefers-reduced-motion: reduce) { .home-label.nudge { animation: none; } }
 @media (prefers-reduced-motion: reduce) { .star, .lamp-glow, .bloom.on, .flood { animation: none; } }
 </style>
 
@@ -148,10 +179,6 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       <div id="hit" role="img" aria-label="Hourglass. Flick it to shake the sand."></div>
     </div>
 
-    <div class="tiltchip"><button type="button" id="tiltchip" hidden>Tilt preview</button></div>
-    <div class="brand" aria-hidden="true">D&middot;FOCUS</div>
-    <p class="clock" id="clock" role="timer" aria-label="Time left">05:00</p>
-    <p class="subtitle" id="subtitle" aria-live="polite"></p>
     <div class="controls">
       <button type="button" class="icon-btn" id="sound" aria-label="Sound on" aria-pressed="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -160,7 +187,11 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
           <g id="muteX" style="display:none"><path d="M16 9.5l5 5"/><path d="M21 9.5l-5 5"/></g>
         </svg>
       </button>
-      <button type="button" class="pill" id="pill">Start focus</button>
+      <button type="button" class="play" id="play" aria-label="Play" data-icon="play">
+        <svg class="i-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6.4" y="5" width="3.8" height="14" rx="1.3"/><rect x="13.8" y="5" width="3.8" height="14" rx="1.3"/></svg>
+        <svg class="i-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.2 5.4v13.2a.9.9 0 0 0 1.4.75l10-6.6a.9.9 0 0 0 0-1.5l-10-6.6a.9.9 0 0 0-1.4.75z"/></svg>
+        <svg class="i-again" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4v4.6h4.6"/></svg>
+      </button>
       <button type="button" class="icon-btn" id="gear" aria-label="Settings" aria-haspopup="dialog" aria-controls="sheet">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="3.2"/>
@@ -168,8 +199,41 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
         </svg>
       </button>
     </div>
-    <div class="link"><button type="button" id="link" hidden>End session</button></div>
   </div>
+
+  <section class="home open" id="home" aria-labelledby="home-title">
+    <div class="home-bg" id="home-bg" aria-hidden="true"></div>
+    <div class="home-inner">
+      <h1 class="home-brand" id="home-title">D&middot;FOCUS</h1>
+      <div>
+        <p class="home-label" id="time-label">Time</p>
+        <div class="home-chips" role="group" aria-labelledby="time-label" id="times">
+          <button type="button" class="hchip" data-min="30" aria-pressed="false">30 min</button>
+          <button type="button" class="hchip" data-min="60" aria-pressed="false">1 hr</button>
+          <button type="button" class="hchip" data-min="120" aria-pressed="false">2 hr</button>
+          <button type="button" class="hchip" data-min="180" aria-pressed="false">3 hr</button>
+          <button type="button" class="hchip" data-min="custom" aria-pressed="false">Custom</button>
+        </div>
+        <div class="stepper" id="stepper" hidden>
+          <button type="button" class="step" id="minus" aria-label="Less time"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg></button>
+          <output class="step-val" id="custom-val" aria-live="polite">45 min</output>
+          <button type="button" class="step" id="plus" aria-label="More time"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+          <button type="button" class="step go" id="go" aria-label="Start"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+      <div>
+        <p class="home-label" id="mode-label">Mode</p>
+        <div class="home-chips" role="group" aria-labelledby="mode-label" id="modes">
+          <button type="button" class="hchip" aria-pressed="false">Reading</button>
+          <button type="button" class="hchip" aria-pressed="false">Studying</button>
+          <button type="button" class="hchip" aria-pressed="false">Coding</button>
+          <button type="button" class="hchip" aria-pressed="false">Designing</button>
+          <button type="button" class="hchip" aria-pressed="false">Writing</button>
+          <button type="button" class="hchip" aria-pressed="false">Deep work</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <div class="scrim" id="scrim"></div>
   <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" aria-hidden="true">
@@ -181,81 +245,36 @@ input[type=range] { width: 100%; accent-color: var(--amber); height: 32px; }
       </button>
     </div>
     <div class="group">
-      <p class="label" id="len-label">Session length</p>
-      <div class="chips" role="group" aria-labelledby="len-label" id="lengths">
-        <button type="button" class="chip" data-min="1" aria-pressed="false">1 min preview</button>
-        <button type="button" class="chip" data-min="5" aria-pressed="true">5 min</button>
-        <button type="button" class="chip" data-min="25" aria-pressed="false">25 min</button>
-        <button type="button" class="chip" data-min="50" aria-pressed="false">50 min</button>
+      <p class="label" id="theme-label">Theme</p>
+      <div class="chips" role="group" aria-labelledby="theme-label" id="themes">
+        <button type="button" class="chip" data-theme="random" aria-pressed="true">Random</button>
+        <button type="button" class="chip" data-theme="cr7" aria-pressed="false">CR7</button>
+        <button type="button" class="chip" data-theme="mona" aria-pressed="false">Mona Lisa</button>
       </div>
-      <p class="note" id="len-note">The whole picture forms in exactly this time, while the hourglass stands upright.</p>
+      <p class="note" id="theme-note" hidden>Used from your next session.</p>
     </div>
     <div class="group">
-      <p class="label">Motion</p>
+      <label class="label" for="volume">Sound</label>
+      <input type="range" id="volume" min="0" max="100" value="70">
+    </div>
+    <div class="group">
       <div class="row">
         <div class="row-text">
           <span class="row-title" id="tilt-label">Tilt and shake</span>
-          <span class="status"><span class="dot" id="sensor-dot"></span><span id="sensor-text">Motion sensor not available on this screen</span></span>
+          <span class="status"><span class="dot" id="sensor-dot"></span><span id="sensor-text"></span></span>
         </div>
         <button type="button" class="switch" id="tilt" role="switch" aria-checked="true" aria-labelledby="tilt-label"></button>
       </div>
-      <div class="row">
-        <div class="row-text">
-          <span class="row-title" id="flat-label">Keep falling when lying flat</span>
-          <span class="note">Set the phone down on your desk and the hourglass keeps standing.</span>
-        </div>
-        <button type="button" class="switch" id="flat" role="switch" aria-checked="true" aria-labelledby="flat-label"></button>
-      </div>
-      <div id="preview-tools" style="display:flex;flex-direction:column;gap:10px">
-        <div class="chips" role="group" aria-label="Turn the hourglass" id="tilts">
-          <button type="button" class="chip" data-angle="0" aria-pressed="true">Upright</button>
-          <button type="button" class="chip" data-angle="35" aria-pressed="false">Leaning</button>
-          <button type="button" class="chip" data-angle="90" aria-pressed="false">On its side</button>
-          <button type="button" class="chip" data-angle="180" aria-pressed="false">Upside down</button>
-        </div>
-        <p class="note">This screen can't read a motion sensor, so these turn the hourglass for you. Arrow keys work too.</p>
+      <div class="chips" role="group" aria-label="Turn the hourglass" id="preview-tools">
+        <button type="button" class="chip" data-angle="0" aria-pressed="true">Upright</button>
+        <button type="button" class="chip" data-angle="90" aria-pressed="false">On its side</button>
+        <button type="button" class="chip" data-angle="180" aria-pressed="false">Upside down</button>
       </div>
     </div>
-    <div class="group">
-      <p class="label" id="subj-label">Focusing on</p>
-      <div class="chips" role="group" aria-labelledby="subj-label" id="subjects">
-        <button type="button" class="chip" aria-pressed="true">Physics</button>
-        <button type="button" class="chip" aria-pressed="false">Chemistry</button>
-        <button type="button" class="chip" aria-pressed="false">Maths</button>
-        <button type="button" class="chip" aria-pressed="false">Coding</button>
-        <button type="button" class="chip" aria-pressed="false">Writing</button>
-        <button type="button" class="chip" aria-pressed="false">Design</button>
-      </div>
+    <div class="group" id="end-group" hidden>
+      <button type="button" class="end" id="end">End session</button>
     </div>
-    <div class="group">
-      <p class="label" id="theme-label">Theme</p>
-      <div class="themes" role="group" aria-labelledby="theme-label">
-        <button type="button" class="art" data-theme="cr7" aria-pressed="false">
-          <img alt="" data-thumb="cr7">
-          <span class="art-text"><span class="art-title">CR7</span><span class="art-sub">Stadium at dusk</span></span>
-        </button>
-        <button type="button" class="art" data-theme="mona" aria-pressed="false">
-          <img alt="" data-thumb="mona">
-          <span class="art-text"><span class="art-title">Mona Lisa</span><span class="art-sub">Night desk</span></span>
-        </button>
-      </div>
-      <p class="note" id="theme-note">Each theme has its own sand. The grains in the top bulb are the same ones that build the picture.</p>
-    </div>
-    <div class="group">
-      <div class="row">
-        <div class="row-text">
-          <span class="row-title" id="dnd-label">Silence notifications</span>
-          <span class="note">In the app, Do Not Disturb turns on while the sand falls.</span>
-        </div>
-        <button type="button" class="switch" id="dnd" role="switch" aria-checked="true" aria-labelledby="dnd-label"></button>
-      </div>
-    </div>
-    <div class="group">
-      <label class="label" for="volume">Lofi and sand volume</label>
-      <input type="range" id="volume" min="0" max="100" value="70">
-      <p class="note" id="music-credit"></p>
-      <p class="note">Flick the hourglass to shake it, or shake your phone.</p>
-    </div>
+    <p class="note credit" id="music-credit"></p>
   </section>
 </div>
 
@@ -926,56 +945,27 @@ const D = {"cell":2,"gx0":280,"gy0":376,"gw":200,"gh":441,"rows":[[1,0],[28,168]
   }
 
   // ---------- session ----------
-  let state = 'idle', durSec = 300, n0 = NGR, flowAcc = 0, decoAcc = 0, pausesLeft = 2, focused = 0, settleFrames = 0, streak = 12;
+  let state = 'home', durSec = 1800, n0 = 1, flowAcc = 0, decoAcc = 0, settleFrames = 0;
   let topCount = 0, lastFlowAt = 0, flowDir = 0, hadTop = true, flipHold = 0, left = durSec;
-  const clockEl = document.getElementById('clock'), subEl = document.getElementById('subtitle');
-  const pill = document.getElementById('pill'), linkBtn = document.getElementById('link'), bloom = document.getElementById('bloom');
-  const fmt = (s) => { s = Math.max(0, Math.ceil(s - 0.001)); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); };
+  let themePref = 'random', selMin = null, selMode = null, customMin = 45, startTimer = 0;
+  const playBtn = document.getElementById('play'), bloom = document.getElementById('bloom'), homeEl = document.getElementById('home');
   const setText = (el, txt) => { if (el.textContent !== txt) el.textContent = txt; };
-  const inSession = () => state === 'running' || state === 'paused' || state === 'confirm';
+  const inSession = () => state === 'running' || state === 'paused';
   function render() {
-    setText(clockEl, fmt(left));
-    const t = now(), stalled = state === 'running' && t - lastFlowAt > 900 && topCount > 0;
-    const p = { idle: 'Start focus', running: pausesLeft > 0 ? 'Pause' : 'End session', paused: 'Keep focusing', confirm: 'Keep focusing', complete: 'Start again', left: 'Start focus', flipping: 'Start again' }[state];
-    setText(pill, p);
-    let msg = {
-      idle: T.idle,
-      running: 'Your masterpiece is taking shape',
-      paused: pausesLeft === 1 ? 'Paused · one pause left this session' : 'Paused · no pauses left this session',
-      confirm: `Leave now? Your ${streak}-day streak will crack`,
-      complete: sensor.live ? 'Masterpiece complete · turn your phone over to go again' : `Masterpiece complete · ${streak}-day streak`,
-      left: `You focused ${fmt(focused)}. The rest of the sand spilled`,
-      flipping: 'Turning the hourglass over'
-    }[state];
-    if (state === 'running') {
-      if (flowDir < 0 && t - lastFlowAt < 900) msg = 'Upside down · the sand is flowing back';
-      else if (stalled && grav.y < 0.35) msg = grav.y < -0.35 ? 'Upside down · time is resting' : 'On its side · time is resting';
-    }
-    setText(subEl, msg);
-    linkBtn.hidden = !(state === 'paused' || state === 'confirm');
-    setText(linkBtn, state === 'confirm' ? 'Leave anyway' : 'End session');
+    const icon = (state === 'running' || state === 'starting' || state === 'flipping') ? 'pause' : state === 'complete' ? 'again' : 'play';
+    if (playBtn.dataset.icon !== icon) { playBtn.dataset.icon = icon; playBtn.setAttribute('aria-label', icon === 'pause' ? 'Pause' : icon === 'again' ? 'New session' : 'Play'); }
     bloom.classList.toggle('on', state === 'complete');
-    pill.disabled = state === 'flipping';
-    document.querySelectorAll('#lengths .chip').forEach(b => b.disabled = inSession());
-    document.querySelectorAll('.themes .art').forEach(b => b.disabled = inSession());
-    setText(document.getElementById('len-note'), inSession() ? 'You can change this after the current session.' : 'The whole picture forms in exactly this time, while the hourglass stands upright.');
-    // motion status
-    const dot = document.getElementById('sensor-dot');
-    dot.classList.toggle('live', sensor.live);
-    setText(document.getElementById('sensor-text'), !tiltOn ? 'Off: the hourglass stays upright' : sensor.live ? 'Live: the sand follows your phone' : (needsPermission && !askedMotion ? 'Tap Start focus to allow motion access' : 'Motion sensor not available on this screen'));
-    document.getElementById('preview-tools').style.display = sensor.live ? 'none' : 'flex';
-    const chip = document.getElementById('tiltchip');
-    chip.hidden = sensor.live || ((simTarget % 360) + 360) % 360 === 0;
-    setText(chip, `Turned ${Math.round(((simTarget % 360) + 360) % 360)}° · Stand upright`);
+    document.getElementById('sensor-dot').classList.toggle('live', sensor.live);
+    setText(document.getElementById('sensor-text'), !tiltOn ? 'Off: the hourglass stays upright' : sensor.live ? 'Live: the sand follows your phone' : (needsPermission && !askedMotion ? 'Allowed when you start' : 'No motion sensor on this screen'));
+    document.getElementById('preview-tools').style.display = (sensor.live || !tiltOn) ? 'none' : 'flex';
+    document.getElementById('end-group').hidden = !(inSession() || state === 'complete');
+    document.getElementById('theme-note').hidden = !(inSession() || state === 'complete');
+    document.querySelectorAll('#themes .chip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.theme === themePref)));
   }
   function begin(fromComplete) {
     n0 = fromComplete ? countAll() : Math.max(1, topCount);
-    hadTop = !fromComplete; flowAcc = 0; sweeping = false; pausesLeft = 2; settleFrames = 0; lastFlowAt = now();
+    hadTop = !fromComplete; flowAcc = 0; sweeping = false; settleFrames = 0; lastFlowAt = now();
     state = 'running'; setMusic(true); keepAwake(true); render();
-  }
-  function fadeReset(then) {
-    sandC.style.opacity = '0';
-    setTimeout(() => { fillTop(); topCount = countTop(); drawSand(); sandC.style.opacity = '1'; then && then(); }, 460);
   }
   function flipInstant() {
     const ng = new Uint8Array(SZ), ns = new Uint8Array(SZ), over = [];
@@ -992,18 +982,70 @@ const D = {"cell":2,"gx0":280,"gy0":376,"gw":200,"gh":441,"rows":[[1,0],[28,168]
     g.set(ng); sh.set(ns); st.fill(0); rest.fill(0); particles.length = 0; rollers.length = 0;
     topCount = countTop();
   }
-  pill.addEventListener('click', () => {
+  function chooseTheme() {   // the picked theme, or a surprise that differs from the last one
+    const keys = Object.keys(THEMES);
+    let k = themePref;
+    if (!THEMES[k]) { const pool = keys.length > 1 && T ? keys.filter(x => x !== themeKey) : keys; k = pool[(Math.random() * pool.length) | 0]; }
+    if (!T || k !== themeKey) { loadTheme(k); showTheme(); }
+    fillTop(); topCount = countTop(); drawSand();
+  }
+  function goHome() {
+    clearTimeout(startTimer);
+    state = 'home'; setMusic(false); keepAwake(false);
+    selMin = null; selMode = null;
+    document.querySelectorAll('#times .hchip, #modes .hchip').forEach(b => b.setAttribute('aria-pressed', 'false'));
+    document.getElementById('stepper').hidden = true;
+    homeEl.classList.add('open'); homeEl.removeAttribute('aria-hidden');
+    sandC.style.opacity = '0';
+    setTimeout(() => { chooseTheme(); sandC.style.opacity = '1'; }, 480);
+    render();
+  }
+  function startSession() {   // both picked: the hourglass appears and the sand starts
+    if (!selMin || !selMode || state !== 'home') return;
+    clearTimeout(startTimer);
+    startTimer = setTimeout(() => {
+      durSec = selMin * 60; left = durSec; state = 'starting';
+      homeEl.classList.remove('open'); homeEl.setAttribute('aria-hidden', 'true');
+      render();
+      startTimer = setTimeout(() => begin(false), 520);
+    }, 380);
+  }
+  playBtn.addEventListener('click', () => {
     initAudio(); askMotion();
-    if (state === 'idle') begin(false);
-    else if (state === 'left') fadeReset(() => begin(false));
-    else if (state === 'complete') { flipInstant(); state = 'flipping'; render(); setTimeout(() => begin(false), 650); }
-    else if (state === 'running') { state = pausesLeft > 0 ? 'paused' : 'confirm'; if (pausesLeft > 0) pausesLeft--; setMusic(false); render(); }
-    else if (state === 'paused' || state === 'confirm') { state = 'running'; lastFlowAt = now(); setMusic(true); render(); }
+    if (state === 'running') { state = 'paused'; setMusic(false); }
+    else if (state === 'paused') { state = 'running'; lastFlowAt = now(); setMusic(true); }
+    else if (state === 'complete') { goHome(); return; }
+    render();
   });
-  linkBtn.addEventListener('click', () => {
-    if (state === 'paused') { state = 'confirm'; render(); }
-    else if (state === 'confirm') { focused = durSec - left; state = 'left'; left = durSec; setMusic(false); keepAwake(false); render(); }
+  // home screen
+  const STEPS = [1, 5, 10, 15, 20, 25, 30, 40, 45, 60, 75, 90, 120, 150, 180, 240];
+  const fmtMin = (m) => m < 60 ? `${m} min` : (m % 60 ? `${Math.floor(m / 60)} hr ${m % 60} min` : `${m / 60} hr`);
+  document.querySelectorAll('#times .hchip').forEach(btn => btn.addEventListener('click', () => {
+    initAudio(); askMotion();
+    document.querySelectorAll('#times .hchip').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+    const custom = btn.dataset.min === 'custom';
+    document.getElementById('stepper').hidden = !custom;
+    selMin = custom ? customMin : Number(btn.dataset.min);
+    if (!custom) startSession();
+  }));
+  function stepCustom(d) {
+    let i = STEPS.indexOf(customMin); if (i < 0) i = 8;
+    customMin = STEPS[Math.max(0, Math.min(STEPS.length - 1, i + d))]; selMin = customMin;
+    setText(document.getElementById('custom-val'), fmtMin(customMin));
+  }
+  document.getElementById('minus').addEventListener('click', () => stepCustom(-1));
+  document.getElementById('plus').addEventListener('click', () => stepCustom(1));
+  document.getElementById('go').addEventListener('click', () => {
+    initAudio(); askMotion();
+    if (!selMode) { const l = document.getElementById('mode-label'); l.classList.remove('nudge'); void l.offsetWidth; l.classList.add('nudge'); return; }
+    startSession();
   });
+  document.querySelectorAll('#modes .hchip').forEach(btn => btn.addEventListener('click', () => {
+    initAudio(); askMotion();
+    document.querySelectorAll('#modes .hchip').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+    selMode = btn.textContent;
+    if (selMin) startSession();
+  }));
 
   // ---------- shake ----------
   const scene = document.getElementById('scene');
@@ -1052,7 +1094,7 @@ const D = {"cell":2,"gx0":280,"gy0":376,"gw":200,"gh":441,"rows":[[1,0],[28,168]
   scrim.addEventListener('click', () => openSheet(false));
   function setTilt(angle) {
     simTarget = angle;
-    document.querySelectorAll('#tilts .chip').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.angle) === ((angle % 360) + 360) % 360)));
+    document.querySelectorAll('#preview-tools .chip').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.angle) === ((angle % 360) + 360) % 360)));
     render();
   }
   document.addEventListener('keydown', (e) => {
@@ -1063,47 +1105,28 @@ const D = {"cell":2,"gx0":280,"gy0":376,"gw":200,"gh":441,"rows":[[1,0],[28,168]
     else if (e.key === 'ArrowUp') { setTilt(Math.round(simTarget / 360) * 360); e.preventDefault(); }
     else if (e.key === 'ArrowDown') { setTilt(simTarget + 180); e.preventDefault(); }
   });
-  document.querySelectorAll('#tilts .chip').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('#preview-tools .chip').forEach(btn => btn.addEventListener('click', () => {
     const a = Number(btn.dataset.angle), cur = ((simTarget % 360) + 360) % 360;
     let d = a - cur; if (d > 180) d -= 360; if (d < -180) d += 360;
     setTilt(simTarget + d); openSheet(false);
   }));
-  document.getElementById('tiltchip').addEventListener('click', () => setTilt(Math.round(simTarget / 360) * 360));
-  document.querySelectorAll('#lengths .chip').forEach(btn => btn.addEventListener('click', () => {
-    document.querySelectorAll('#lengths .chip').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
-    durSec = Number(btn.dataset.min) * 60;
-    if (!inSession()) left = durSec;
+  const plateEl = document.getElementById('plate'), homeBg = document.getElementById('home-bg');
+  function showTheme() {
+    plateEl.src = T.plate; plateEl.alt = T.alt; homeBg.style.backgroundImage = `url("${T.plate}")`;
+    device.dataset.theme = themeKey; setText(document.getElementById('music-credit'), T.credit);
+  }
+  document.querySelectorAll('#themes .chip').forEach(b => b.addEventListener('click', () => {
+    themePref = b.dataset.theme;
+    try { localStorage.setItem('dfocus-theme', themePref); } catch (e) {}
+    if (state === 'home') { sandC.style.opacity = '0'; setTimeout(() => { chooseTheme(); sandC.style.opacity = '1'; }, 300); }
     render();
   }));
-  document.querySelectorAll('#subjects .chip').forEach(btn => btn.addEventListener('click', () => {
-    document.querySelectorAll('#subjects .chip').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
-  }));
-  const plateEl = document.getElementById('plate');
-  function showTheme() {
-    plateEl.src = T.plate; plateEl.alt = T.alt; device.dataset.theme = themeKey;
-    document.querySelectorAll('.themes .art').forEach(b => { b.setAttribute('aria-pressed', String(b.dataset.theme === themeKey)); b.disabled = inSession(); });
-    setText(document.getElementById('music-credit'), T.credit);
-  }
-  function setTheme(key) {
-    if (!THEMES[key] || key === themeKey || inSession()) return;
-    try { localStorage.setItem('dfocus-theme', key); } catch (e) {}
-    sandC.style.opacity = '0';
-    setTimeout(() => {
-      loadTheme(key); showTheme(); fillTop(); topCount = countTop(); drawSand();
-      state = 'idle'; left = durSec; sandC.style.opacity = '1'; render();
-    }, 460);
-  }
-  document.querySelectorAll('.themes .art').forEach(b => {
-    b.querySelector('img').src = THEMES[b.dataset.theme].thumb;
-    b.addEventListener('click', () => setTheme(b.dataset.theme));
-  });
+  document.getElementById('end').addEventListener('click', () => { openSheet(false); goHome(); });
   function bindSwitch(id, fn) {
     const el = document.getElementById(id);
     el.addEventListener('click', () => { const on = el.getAttribute('aria-checked') !== 'true'; el.setAttribute('aria-checked', String(on)); fn(on); render(); });
   }
-  bindSwitch('dnd', () => {});
-  bindSwitch('tilt', (on) => { tiltOn = on; if (on) askMotion(); applyTurn(); });
-  bindSwitch('flat', (on) => { flatKeep = on; });
+  bindSwitch('tilt', (on) => { tiltOn = on; if (on) askMotion(); else setTilt(0); applyTurn(); });
 
   // ---------- fit the painting to the screen ----------
   function fit() {
@@ -1116,8 +1139,8 @@ const D = {"cell":2,"gx0":280,"gy0":376,"gw":200,"gh":441,"rows":[[1,0],[28,168]
 
   // ---------- main loop ----------
   setGravity(0, 1, 1);
-  { let k = 'cr7'; try { const v = localStorage.getItem('dfocus-theme'); if (v && THEMES[v]) k = v; } catch (e) {} loadTheme(k); showTheme(); }
-  fillTop(); topCount = countTop(); drawSand(); render();
+  try { const v = localStorage.getItem('dfocus-theme'); if (v && (v === 'random' || THEMES[v])) themePref = v; } catch (e) {}
+  chooseTheme(); render();
   let last = now(), uiAcc = 0, wasLive = false, wakeAngle = Math.PI / 2, sweeping = false, workAvg = 0, slowDevice = false;
   function takeLowestTop() {   // the last few grains clinging to the glass slip through at the very end
     for (let y = NECK - 1; y >= 0; y--) for (let x = A[y]; x <= B[y]; x++) { const i = y * W + x; if (g[i]) { const c = g[i], s = sh[i]; g[i] = 0; return { c, s }; } }
@@ -1177,7 +1200,7 @@ const D = {"cell":2,"gx0":280,"gy0":376,"gw":200,"gh":441,"rows":[[1,0],[28,168]
       left = durSec * Math.min(1, topCount / n0);
       let realAir = 0; for (const p of particles) if (p.real) realAir++;
       if (hadTop && topCount === 0 && realAir === 0 && rollers.length === 0 && along > 0.3) {
-        if (++settleFrames > 45) { state = 'complete'; left = 0; streak++; setMusic(false); keepAwake(false); chime(); render(); }
+        if (++settleFrames > 45) { state = 'complete'; left = 0; setMusic(false); keepAwake(false); chime(); render(); }
       } else settleFrames = 0;
     }
     drawSand();

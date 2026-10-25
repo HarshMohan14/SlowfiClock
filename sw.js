@@ -1,5 +1,5 @@
 // D·Focus offline cache: the app shell works without a connection after the first visit
-const CACHE = 'dfocus-v2';
+const CACHE = 'dfocus-v3';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png', './cr7-transformation.mp3'];
 
 self.addEventListener('install', (e) => {
