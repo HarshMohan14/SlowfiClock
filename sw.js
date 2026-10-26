@@ -1,6 +1,6 @@
-// D·Focus offline cache: the app shell works without a connection after the first visit
-const CACHE = 'dfocus-v3';
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png', './cr7-transformation.mp3'];
+// SlowfiClock offline cache: the app shell works without a connection after the first visit
+const CACHE = 'slowfi-v4';
+const ASSETS = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png', './cr7-transformation.mp3', './clock-cr7.webp', './clock-mona.webp'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));

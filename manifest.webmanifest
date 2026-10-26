@@ -1,7 +1,7 @@
 {
-  "name": "D·Focus",
-  "short_name": "D·Focus",
-  "description": "A lamplit focus hourglass. Real falling sand settles into a masterpiece as your session ends.",
+  "name": "SlowfiClock",
+  "short_name": "SlowfiClock",
+  "description": "A slow lofi focus clock. Real falling sand settles into a picture as your session ends, and every finished clock joins your gallery.",
   "id": "./",
   "start_url": "./",
   "scope": "./",

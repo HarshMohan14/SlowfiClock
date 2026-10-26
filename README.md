@@ -1,33 +1,37 @@
-# SlowfiClock
+# SlowfiClock — installable web app
 
-D·Focus: a lamplit focus hourglass. Real falling sand settles grain by grain into a picture as your session ends. Two themes: CR7 at the stadium and Mona Lisa at a night desk. Installable as a web app, works offline, and the sand follows your phone's motion sensor.
+A slow lofi focus clock. Pick a time and a mode, and real falling sand settles into a picture as your session ends. Every finished clock joins your clock gallery.
 
-Everything in this folder is the app: `index.html`, `manifest.webmanifest`, `sw.js` and `icons/`.
-Motion sensors and installing only work over **https**, so put the folder on any static host first.
-
-## Put it online (2 minutes, free)
-
-- **Netlify Drop:** open https://app.netlify.com/drop and drag this whole folder onto the page. You get an https link straight away.
-- **GitHub Pages:** push the folder to a repository, then Settings → Pages → deploy from the main branch.
-- **Vercel / Cloudflare Pages:** create a project from the folder; no build step is needed.
+Everything in this folder is the app: `index.html`, `manifest.webmanifest`, `sw.js`, `icons/`, the two clock images and the music file.
+Motion sensors and installing only work over **https**, so it needs a static host (this repo deploys on Vercel; no build step).
 
 ## Install it on your phone
 
-- **iPhone (Safari):** open the link → Share → **Add to Home Screen**. Open it from the home screen, tap **Start focus**, and allow **Motion & Orientation** when asked.
-- **Android (Chrome):** open the link → menu → **Install app** (or the install banner). Motion works without a prompt.
+- **iPhone (Safari):** open the link → Share → **Add to Home Screen**. Allow **Motion & Orientation** when asked.
+- **Android (Chrome):** open the link → menu → **Install app**.
 
-## What the phone controls
+## How a session goes
 
-- **Tilt:** sand follows real gravity. Lean the phone and the stream bends; turn it on its side and the sand slides away from the neck, so time rests; turn it upside down and the sand (and time) flows back.
-- **Lying flat:** by default the hourglass keeps standing when the phone lies on a desk. Turn this off in Settings → Motion for pure physics.
-- **Shake:** shake the phone, or flick the hourglass on screen.
-- **Finished?** Turn the phone over to start the sand again, like a real hourglass.
-- **Screen:** stays awake during a session. On Android the app is locked to portrait; on iPhone, turn on Portrait Orientation Lock so the hourglass stays fixed to the phone.
+1. **Home:** pick a time (30 min, 1, 2, 3 hr or custom up to 8 hr) and a mode (Reading, Studying, Coding, Designing, Writing, Deep work, Hobby). The session starts as soon as both are picked.
+2. **Silence notifications:** a gentle prompt to turn on Do Not Disturb, with the steps for your phone. It can be switched off in the prompt or in Settings. A web app can't switch Do Not Disturb on by itself.
+3. **Session:** only the hourglass, with sound, play/pause and settings. Tilt, shake, or turn the phone over like a real hourglass.
+4. **Complete:** a quiet thank-you card with the clock you collected, its rarity and a short quote. Start a new session or open the gallery.
 
-After the first visit the app works offline.
+## Clock gallery and rarity
 
-## Themes and music
+Rarity follows the length of the session that made the clock:
+
+| Rarity | Session length |
+| --- | --- |
+| Common | under 1 hr |
+| Uncommon | 1–2 hr |
+| Rare | 2–3 hr |
+| Epic | 3–5 hr |
+| Legendary | 5–8 hr |
+
+Each theme belongs to one rarity (CR7 is Rare, Mona Lisa is Legendary). A session gets a random theme from its rarity; while a rarity has no theme of its own yet, any theme can appear. The home screen shows this month as a row of dots (filled on days you focused) and your latest clocks. Nothing is lost for missed days. History is kept on the device only.
+
+## Music
 
 - **CR7** (stadium at dusk) plays “Transformation” by Purrple Cat, licensed CC BY 4.0, credit: Purrple Cat.
 - **Mona Lisa** (night desk) plays a lofi loop generated live by the app.
-- Switch themes in Settings → Theme. Each theme has its own sand colours, shared by both bulbs.
