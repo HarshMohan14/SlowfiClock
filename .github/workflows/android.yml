@@ -1,0 +1,45 @@
+name: Android app
+
+# Builds an installable test version of the Android app on every push.
+# Download it on a phone from the "Android test build" release on GitHub.
+on:
+  push:
+    branches: [main, modular-capacitor]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+      - name: Check the designs and build the catalog
+        run: python3 tools/build_catalog.py
+      - run: npx cap sync android
+      - name: Build the app
+        working-directory: android
+        run: chmod +x gradlew && ./gradlew assembleDebug --no-daemon --stacktrace
+      - run: cp android/app/build/outputs/apk/debug/app-debug.apk SlowfiClock-test.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SlowfiClock-test
+          path: SlowfiClock-test.apk
+      - name: Publish as the Android test build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete android-test --cleanup-tag --yes || true
+          gh release create android-test SlowfiClock-test.apk --prerelease --target "$GITHUB_SHA" \
+            --title "Android test build" \
+            --notes "Test version of SlowfiClock for Android, built from ${GITHUB_REF_NAME} at ${GITHUB_SHA::7}. On your phone: download SlowfiClock-test.apk, open it, and allow installing from your browser when asked."

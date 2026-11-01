@@ -1,0 +1,33 @@
+{
+  "name": "Night desk, hillside town",
+  "alt": "An antique walnut and brass hourglass on a lamplit desk by an arched window, a hillside town and crescent moon outside",
+  "image": "image.jpg",
+  "size": [941, 1672],
+  "desk": [477.5, 1388.7],
+  "effects": [
+    {
+      "type": "stars",
+      "area": [240, 16, 930, 336],
+      "avoid": [
+        [740, 80, 850, 190],
+        [330, 70, 620, 235]
+      ],
+      "count": 26
+    },
+    {
+      "type": "glow",
+      "x": -200,
+      "y": 200,
+      "w": 520,
+      "h": 520,
+      "color": [255, 196, 110],
+      "strength": 0.32,
+      "pulse": "lamp"
+    }
+  ],
+  "clockPainted": [
+    "walnut-lamp",
+    "walnut-dusk"
+  ],
+  "note": "This painting already has the walnut hourglass in it, so only clocks of that exact shape fit over it. Paint new backgrounds without a clock."
+}

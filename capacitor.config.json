@@ -1,0 +1,18 @@
+{
+  "appId": "com.slowficlock.app",
+  "appName": "SlowfiClock",
+  "webDir": "web",
+  "backgroundColor": "#120E14",
+  "android": {
+    "backgroundColor": "#120E14",
+    "allowMixedContent": false
+  },
+  "ios": {
+    "backgroundColor": "#120E14",
+    "contentInset": "never"
+  },
+  "plugins": {
+    "SystemBars": { "insetsHandling": "css", "style": "DARK", "hidden": false, "initialViewportFitValueHint": "cover" },
+    "SplashScreen": { "launchShowDuration": 2500, "launchAutoHide": true, "launchFadeOutDuration": 400, "backgroundColor": "#120E14", "showSpinner": false, "androidScaleType": "CENTER_CROP" }
+  }
+}

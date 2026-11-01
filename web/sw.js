@@ -1,6 +1,30 @@
 // SlowfiClock offline cache: the app shell works without a connection after the first visit
-const CACHE = 'slowfi-v4';
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png', './cr7-transformation.mp3', './clock-cr7.webp', './clock-mona.webp'];
+const CACHE = 'slowfi-v5';
+// precache:start
+const ASSETS = [
+  "./",
+  "./index.html",
+  "./manifest.webmanifest",
+  "./content/catalog.json",
+  "./icons/apple-touch-icon.png",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
+  "./icons/icon-maskable-512.png",
+  "./fonts/cormorant-garamond-latin-500-italic.woff2",
+  "./fonts/cormorant-garamond-latin-500-normal.woff2",
+  "./fonts/cormorant-garamond-latin-600-normal.woff2",
+  "./fonts/jost-latin-300-normal.woff2",
+  "./fonts/jost-latin-400-normal.woff2",
+  "./fonts/jost-latin-500-normal.woff2",
+  "./content/clocks/walnut-dusk/frame.webp",
+  "./content/backgrounds/stadium-dusk/image.jpg",
+  "./content/sands/cr7-celebration/picture.png",
+  "./content/music/transformation/track.mp3",
+  "./content/clocks/walnut-lamp/frame.webp",
+  "./content/backgrounds/night-desk/image.jpg",
+  "./content/sands/mona-lisa/picture.png"
+];
+// precache:end
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));

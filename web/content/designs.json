@@ -1,0 +1,42 @@
+{
+  "designs": [
+    {
+      "id": "cr7",
+      "title": "CR7",
+      "tier": "rare",
+      "clock": "walnut-dusk",
+      "background": "stadium-dusk",
+      "sand": "cr7-celebration",
+      "music": "transformation"
+    },
+    {
+      "id": "mona",
+      "title": "Mona Lisa",
+      "tier": "legendary",
+      "clock": "walnut-lamp",
+      "background": "night-desk",
+      "sand": "mona-lisa",
+      "music": "lofi-keys"
+    },
+    {
+      "id": "mona-at-the-match",
+      "title": "Mona at the match",
+      "tier": "epic",
+      "clock": "walnut-dusk",
+      "background": "stadium-dusk",
+      "sand": "mona-lisa",
+      "music": "transformation",
+      "enabled": false
+    },
+    {
+      "id": "cr7-after-dark",
+      "title": "CR7 after dark",
+      "tier": "uncommon",
+      "clock": "walnut-lamp",
+      "background": "night-desk",
+      "sand": "cr7-celebration",
+      "music": "lofi-keys",
+      "enabled": false
+    }
+  ]
+}

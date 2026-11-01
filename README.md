@@ -1,9 +1,20 @@
-# SlowfiClock — installable web app
+# SlowfiClock
 
-A slow lofi focus clock. Pick a time and a mode, and real falling sand settles into a picture as your session ends. Every finished clock joins your clock gallery.
+A slow lofi focus clock. Pick a time and a mode, and real falling sand settles into a picture as your
+session ends. Every finished clock joins your clock gallery.
 
-Everything in this folder is the app: `index.html`, `manifest.webmanifest`, `sw.js`, `icons/`, the two clock images and the music file.
-Motion sensors and installing only work over **https**, so it needs a static host (this repo deploys on Vercel; no build step).
+## How this repo is laid out
+
+| Path | What it is |
+| --- | --- |
+| `web/` | The app itself: `index.html`, the offline worker, icons, fonts. Vercel serves this folder. |
+| `web/content/` | The designs, as separate parts: `clocks/`, `backgrounds/`, `sands/`, `music/`, and `designs.json` that combines them. See **CONTENT.md**. |
+| `tools/` | `build_catalog.py` (check the parts and gather them), `make_sand.py`, `make_clock.py`. |
+| `android/` | The Android app (Capacitor), including the Do Not Disturb plugin. |
+| `.github/workflows/android.yml` | Builds a test APK on every push and publishes it as the "Android test build" release. |
+
+After changing anything in `web/content/`, run `python3 tools/build_catalog.py`.
+To refresh the Android project after web changes: `npm run sync`.
 
 ## Install it on your phone
 

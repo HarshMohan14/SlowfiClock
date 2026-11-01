@@ -1,0 +1,17 @@
+{
+  "name": "CR7 celebration",
+  "by": "The celebration, in sand",
+  "picture": "picture.png",
+  "palette": [
+    [200, 45, 50],
+    [240, 228, 204],
+    [40, 35, 33],
+    [195, 139, 91],
+    [66, 112, 74],
+    [195, 154, 72]
+  ],
+  "shades": [0.8, 0.94, 1.08, 1.2],
+  "topMix": [0.08, 0.5, 0.08, 0.22, 0.0, 0.12],
+  "match": "rgb",
+  "diffusion": 0.85
+}
